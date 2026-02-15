@@ -138,38 +138,44 @@ plt.plot(
     df_model[COL_OB],
     m * df_model[COL_OB] + b, linewidth = 2, color = "black"
 )
+r = df_model[COL_OB].corr(df_model[COL_CVD])
+print("Correlation (r):", r)
 plt.xlabel("Obesity(%)")
 plt.ylabel("Cardiovascular Mortality Rate")
 plt.title("Obesity(%) vs Cardiovascular Mortality Over Time")
 plt.legend()
 plt.show()
-#Plot Obesity vs High Blood Pressure
-plt.scatter(df_model[COL_OB],df_model[COL_HBP],alpha=0.5, s=200)
-m,b = np.polyfit(df_model[COL_OB],df_model[COL_HBP],1)
+#Plot High Blood Pressure vs Cardiovascular Mortality Rate
+plt.scatter(df_model[COL_HBP],df_model[COL_CVD],alpha=0.5, s=200)
+m,b = np.polyfit(df_model[COL_HBP],df_model[COL_CVD],1)
 plt.plot(
-    df_model[COL_OB],
-    m * df_model[COL_OB] + b, linewidth = 2, color = "blue"
+    df_model[COL_HBP],
+    m * df_model[COL_HBP] + b, linewidth = 2, color = "blue"
 )
-plt.xlabel("Obesity(%)")
-plt.ylabel("High Blood Pressure")
-plt.title("Obesity(%) vs High Blood Pressure")
+r = df_model[COL_HBP].corr(df_model[COL_CVD])
+print("Correlation (r):", r)
+plt.xlabel("High Blood Pressure(%)")
+plt.ylabel("Cardiovascular Mortality Rate")
+plt.title("High Blood Pressure(%) vs Cardiovascular Mortality Rate Over Time")
 plt.legend()
 plt.show()
-#Plot Obesity(%) vs Physical Inactivity Pct
-plt.scatter(df_model[COL_OB],df_model[COL_PI],alpha=0.5, s=200)
-m, b = np.polyfit(df_model[COL_OB],df_model[COL_PI],1)
+#Plot Physical Inactivity(%) vs Cardiovascular Mortality Rate
+plt.scatter(df_model[COL_PI],df_model[COL_CVD],alpha=0.5, s=200)
+m, b = np.polyfit(df_model[COL_PI],df_model[COL_CVD],1)
 plt.plot(
-    df_model[COL_OB],
-    m * df_model[COL_OB] + b, linewidth = 2, color = "black"
+    df_model[COL_PI],
+    m * df_model[COL_PI] + b, linewidth = 2, color = "black"
 )
-plt.xlabel("Obesity(%)")
-plt.ylabel("Physical Inactivity")
-plt.title("Obesity(%) vs Physical Inactivity")
+r = df_model[COL_PI].corr(df_model[COL_CVD])
+print("Correlation (r):", r)
+plt.xlabel("Physical Inactivity(%)")
+plt.ylabel("Cardiovascular Mortality Rate")
+plt.title("Physical Inactivity(%) vs Cardiovascular Mortality Rate Over Time")
 plt.legend()
 plt.show()
 
 #Subplots
-pairs = [(COL_OB,"Obesity(%)"),(COL_PI,"Physical Inactivity(%"),(COL_HBP,"High Blood Pressure")]
+pairs = [(COL_OB,"Obesity(%)"),(COL_PI,"Physical Inactivity(%)"),(COL_HBP,"High Blood Pressure(%)")]
 fig, axes = plt.subplots(1, 3, figsize=(18,5))
 for ax, (xcol,xlabel) in zip(axes, pairs):
 #Finding the regression for the pair CVD ~ xcol
@@ -182,6 +188,7 @@ for ax, (xcol,xlabel) in zip(axes, pairs):
     ax.plot(x_line, y_line, linewidth = 2, color = "black")
 #4) Label on plots
     ax.set_xlabel(xlabel)
+    ax.set_title(f"{xlabel}\nβ={model.params[xcol]:.2f}, R²={model.rsquared:.2f}, p={model.pvalues[xcol]:.3g}")
 axes[0].set_ylabel("CVD Mortality Rate")
 fig.suptitle("Baltimore City: Multiple Regressions vs CVD Morality")
 plt.tight_layout()
@@ -198,6 +205,5 @@ plt.show()
 
 #axes[1,1].plot(df["Year"], df[COL_CVD])
 #axes[1,1].set_title("CVD Over Time")
-
 
 
