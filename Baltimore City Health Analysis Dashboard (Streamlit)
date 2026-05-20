@@ -2,22 +2,18 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import statsmodels.formula.api as smf
+import matplotlib.pyplot as plt
+from scipy import stats
+import numpy as np
 
-st.set_page_config(...)
-st.write("Hello Website")
+st.set_page_config(page_title = "Cardiovascular Mortality in Baltimore City",
+                   layout = "wide"
+                   )
 
 COL_OB = "obesity_pct"
 COL_PI = "physical_inactivity_pct"
 COL_CVD = "cvd_mortality_rate"
 COL_HBP = "high_bp_pct"
-
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy import stats
-import statsmodels.api as sm
-import statsmodels.formula.api as smf
 
 
 obesity = pd.read_csv("data/obesity.csv")
@@ -42,15 +38,15 @@ obesity = obesity[["data_period","est"]].rename(columns={
     "data_period":"Year",
     "est":"obesity_pct"
 })
-physical_inactivity = physical_inactivity[["data_period","val"]].rename(columns={
+physical_inactivity = physical_inactivity[["data_period","est"]].rename(columns={
     "data_period":"Year",
     "est":"physical_inactivity_pct"
 })
-cvd_mortality_rate = cvd_mortality_rate[["data_period","val"]].rename(columns={
+cvd_mortality_rate = cvd_mortality_rate[["data_period","est"]].rename(columns={
     "data_period":"Year",
     "est":"cvd_mortality_rate"
 })
-hbp = hbp[["data_period","val"]].rename(columns={
+hbp = hbp[["data_period","est"]].rename(columns={
     "data_period":"Year",
     "est":"high_bp_pct"
 })
@@ -63,10 +59,9 @@ print(master.info())
 print(master.head())
 print(master.isna().sum())
 
-master.to_csv("baltimore_health_master_dataset.csv",index=False)
+master.to_csv("data/baltimore_health_master.csv",index=False)
 
 
-st.set_page_config(page_title = "Cardiovascular Mortality and Disease in Baltimore City")
 
 st.title("Baltimore City Cardiovascular Risk Dashboard")
 
@@ -75,7 +70,6 @@ st.write("This app explores which health predictors: Obesity, Physical Inactivit
 @st.cache_data
 def load_data():
     df = pd.read_csv("data/baltimore_health_master.csv")
-    df.to_csv("data/baltimore_health_master.csv", index=False)
     return df.sort_values("Year")
 df = load_data()
 
